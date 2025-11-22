@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+
+int pqArray[100];
+int currentSize = 0;
+
+void addElement(int val) {
+    pqArray[currentSize] = val;
+    int pos = currentSize;
+    currentSize++;
+
+    while (pos != 0 && pqArray[(pos-1)/2] < pqArray[pos]) {
+        swap(pqArray[pos], pqArray[(pos-1)/2]);
+        pos = (pos-1)/2;
+    }
+}
+
+int removeMax() {
+    if (currentSize == 0)
+        return -1;
+
+    int maxItem = pqArray[0];
+    pqArray[0] = pqArray[currentSize - 1];
+    currentSize--;
+
+    int pos = 0;
+    while (true) {
+        int leftChild = 2*pos + 1;
+        int rightChild = 2*pos + 2;
+        int maxIndex = pos;
+
+        if (leftChild < currentSize && pqArray[leftChild] > pqArray[maxIndex])
+            maxIndex = leftChild;
+
+        if (rightChild < currentSize && pqArray[rightChild] > pqArray[maxIndex])
+            maxIndex = rightChild;
+
+        if (maxIndex == pos)
+            break;
+
+        swap(pqArray[pos], pqArray[maxIndex]);
+        pos = maxIndex;
+    }
+
+    return maxItem;
+}
+
+int main() {
+    int choice, value;
+
+    while (1) {
+        cout << "1. add\n2. remove max\n3. show\n4. quit\n";
+        cin >> choice;
+
+        if (choice == 1) {
+            cin >> value;
+            addElement(value);
+        }
+        else if (choice == 2) {
+            cout << "removed: " << removeMax() << endl;
+        }
+        else if (choice == 3) {
+            for (int i = 0; i < currentSize; i++)
+                cout << pqArray[i] << " ";
+            cout << endl;
+        }
+        else break;
+    }
+
+    return 0;
+}
