@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+
+int heapArr[100];
+int heapSize = 0;
+
+void insertPQ(int value) {
+    heapArr[heapSize] = value;
+    int i = heapSize;
+    heapSize++;
+
+    while (i != 0 && heapArr[(i-1)/2] < heapArr[i]) {
+        swap(heapArr[i], heapArr[(i-1)/2]);
+        i = (i-1)/2;
+    }
+}
+
+int deleteMax() {
+    if (heapSize == 0)
+        return -1;
+
+    int maxVal = heapArr[0];
+    heapArr[0] = heapArr[heapSize - 1];
+    heapSize--;
+
+    int i = 0;
+    while (true) {
+        int left = 2*i + 1;
+        int right = 2*i + 2;
+        int largest = i;
+
+        if (left < heapSize && heapArr[left] > heapArr[largest])
+            largest = left;
+
+        if (right < heapSize && heapArr[right] > heapArr[largest])
+            largest = right;
+
+        if (largest == i)
+            break;
+
+        swap(heapArr[i], heapArr[largest]);
+        i = largest;
+    }
+
+    return maxVal;
+}
+
+int main() {
+    int ch, x;
+
+    while (1) {
+        cout << "1. Insert\n2. Delete Max\n3. Display\n4. Exit\n";
+        cin >> ch;
+
+        if (ch == 1) {
+            cin >> x;
+            insertPQ(x);
+        }
+        else if (ch == 2) {
+            cout << "Deleted: " << deleteMax() << endl;
+        }
+        else if (ch == 3) {
+            for (int i = 0; i < heapSize; i++)
+                cout << heapArr[i] << " ";
+            cout << endl;
+        }
+        else break;
+    }
+
+    return 0;
+}
